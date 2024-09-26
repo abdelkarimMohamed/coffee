@@ -78,7 +78,7 @@
               <div class="card-body">
                 <h5 class="card-title">{{ pro.name }}</h5>
                 <p class="card-text text-truncate">{{ pro.description }}.</p>
-                <a href="#" class="btn btn-warning">Show Details</a>
+                <a href="{% url 'products:product' pro.id %}" class="btn btn-warning">Show Details</a>
               </div>
             </div>
           </div>        
