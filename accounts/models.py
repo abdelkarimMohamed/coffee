@@ -1,12 +1,11 @@
 from django.db import models
 from django.conf import settings
-import re
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class UserProfile(models.Model):
 
-    user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     address=models.CharField(max_length=60)
     address2=models.CharField(max_length=60)
     city=models.CharField(max_length=60)

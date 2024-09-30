@@ -1,10 +1,12 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import UserProfile
 import re
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.hashers import check_password
+
 
 
 # Create your views here.
@@ -27,7 +29,7 @@ def signin(request):
         return redirect('accounts:signin')
     else:
         return render(request,'accounts/signin.html')
-    
+@login_required    
 def user_logout(request):
 
     logout(request)
@@ -124,12 +126,60 @@ def signup(request):
 
     else:
         return render(request,'accounts/signup.html')
-
+    
 def profile(request):
     
     if request.method=='POST' and 'btnsave' in request.POST:
 
-        messages.info(request,'this is post and btn')
+        if request.user is not None and request.user.id != None:
+
+            userprofile=UserProfile.objects.get(user=request.user)
+            if request.POST['fname'] and request.POST['lname'] and request.POST['address'] and request.POST['address2'] and request.POST['email'] and request.POST['city'] and request.POST['state'] and request.POST['zip'] and request.POST['user'] and request.POST['pass']:
+                request.user.first_name=request.POST['fname']
+                request.user.last_name=request.POST['lname']
+                userprofile.address=request.POST['address']
+                userprofile.address2=request.POST['address2']
+                userprofile.city=request.POST['city']
+                userprofile.state=request.POST['state']
+                userprofile.zip_number=request.POST['zip']
+                # if not request.user.check_password(request.POST['pass']):
+                # if not check_password(request.POST['pass'], request.user.password):
+
+
+                if not request.POST['pass'].startswith('pbkdf2_sha256$'):
+
+                    request.user.set_password(request.POST['pass'])
+              
+
+
+                request.user.save()
+                userprofile.save()
+                login(request,request.user)
+                messages.success(request,'Your data has been saved')
+
+            else:
+                messages.error(request,'Check your values and elements')
+
         return redirect('accounts:profile')
     else:
-        return render(request,'accounts/profile.html')
+        if request.user is not None:
+            context=None
+            if not request.user.is_anonymous:
+                userprofile=UserProfile.objects.get(user=request.user)
+                context={
+                    'fname':request.user.first_name,
+                    'lname':request.user.last_name,
+                    'address':userprofile.address,
+                    'address2':userprofile.address2,
+                    'city':userprofile.city,
+                    'state':userprofile.state,
+                    'zip':userprofile.zip_number,
+                    'email':request.user.email,
+                    'user':request.user.username,
+                    'pass':request.user.password,
+                }
+         
+            return render(request,'accounts/profile.html',context)
+        else:
+            return redirect('accounts:profile')
+
