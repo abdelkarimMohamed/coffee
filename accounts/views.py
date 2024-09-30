@@ -2,9 +2,12 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import UserProfile
+from products.models import Product
 import re
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
 # from django.contrib.auth.hashers import check_password
 
 
@@ -182,4 +185,24 @@ def profile(request):
             return render(request,'accounts/profile.html',context)
         else:
             return redirect('accounts:profile')
+
+def product_favorite(request,pro_id):
+    
+    
+    if(request.user.is_authenticated and not request.user.is_anonymous):
+        pro_fav=Product.objects.get(pk=pro_id)
+        print(pro_fav)
+        if UserProfile.objects.filter(user=request.user,product_favorites=pro_fav).exists():
+            messages.success(request,'Already product in the favorite list')
+        else:
+            userprofile=UserProfile.objects.get(user=request.user)
+            userprofile.product_favorites.add(pro_fav)
+            messages.success(request,'Product has been favorited')
+
+    else:
+        messages.error(request,'You must be logged in')
+        
+    # return redirect('products:product' + str(pro_id))
+    # return reverse("products:product",args=[pro_id])
+    return redirect(reverse('products:product', kwargs={'pro_id': pro_id}))
 

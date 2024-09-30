@@ -8,5 +8,6 @@ urlpatterns=[
     path('logout',views.user_logout,name='logout'),
     path('signup',views.signup,name='signup'),
     path('profile',views.profile,name='profile'),
+    path('productfavorite/<int:pro_id>/',views.product_favorite,name='product_favorite'),
 
 ]
