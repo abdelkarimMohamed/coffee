@@ -3,16 +3,35 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import UserProfile
 import re
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+
+
 # Create your views here.
 
 def signin(request):
 
     if request.method=='POST' and 'btnlogin' in request.POST:
+        print(request.POST)
+        username=request.POST['user']
+        password=request.POST['pass']
+        user = authenticate(request, username=username, password=password)
 
-        messages.info(request,'this is post and btn')
+        if user is not None:
+            if 'rememberme' not in request.POST:
+                request.session.set_expiry(0)
+            login(request,user)
+        else:
+            messages.error(request,'Username or Password invalid')
+
         return redirect('accounts:signin')
     else:
         return render(request,'accounts/signin.html')
+    
+def user_logout(request):
+
+    logout(request)
+    return redirect('index')
 
 def signup(request):
 
@@ -64,7 +83,8 @@ def signup(request):
                     else:
                         patt="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
                         if re.match(patt,email):
-                            user=User.objects.create(first_name=fname,last_name=lname,email=email,username=username,password=password)
+                            user=User.objects.create(first_name=fname,last_name=lname,email=email,username=username)
+                            user.set_password(password)
                             user.save()
                             userprofile=UserProfile.objects.create(user=user,address=address,address2=address2,city=city,state=state,zip_number=zip_number)
                             userprofile.save()
