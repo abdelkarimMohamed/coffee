@@ -206,3 +206,13 @@ def product_favorite(request,pro_id):
     # return reverse("products:product",args=[pro_id])
     return redirect(reverse('products:product', kwargs={'pro_id': pro_id}))
 
+def show_product_favorite(request):
+    context=None
+    if(request.user.is_authenticated and not request.user.is_anonymous):
+        
+        userinfo=UserProfile.objects.get(user=request.user)
+        pro=userinfo.product_favorites.all()
+        context={
+            'products':pro
+        }
+    return render(request,'products/products.html',context)
