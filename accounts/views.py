@@ -191,7 +191,6 @@ def product_favorite(request,pro_id):
     
     if(request.user.is_authenticated and not request.user.is_anonymous):
         pro_fav=Product.objects.get(pk=pro_id)
-        print(pro_fav)
         if UserProfile.objects.filter(user=request.user,product_favorites=pro_fav).exists():
             messages.success(request,'Already product in the favorite list')
         else:

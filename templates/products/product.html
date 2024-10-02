@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="my-form container p-5 my-5 rounded border border-warning">
-    <form>
+    <form id="frmaddtocart" action="{% url 'add_to_cart:add_to_cart' %}">
         <h2 class="text-center">Product Details</h2>
         <hr>
         {% include 'partials/_alerts.html' %}
@@ -40,11 +40,13 @@
                               </div>
                               <div class="modal-body">
                                 <label for="inputQty">Quantity: </label>
-                                <input type="text" value="1" name="" class="form-control" id="inputQty" placeholder="" required>
+                                <input type="text" value="1" name="qty" class="form-control" id="inputQty" placeholder="" required>
+                                <input type="hidden" name="pro_id" value="{{ pro.id }}">
+                                <input type="hidden" name="price" value="{{ pro.price }}">
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button class="btn btn-warning">Confirm</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnclose">Close</button>
+                                <button  class="btn btn-warning" onclick="addtocart()">Confirm</button>
                               </div>
                             </div>
                           </div>
@@ -73,6 +75,13 @@
     
 
     </form>
+<script>
+  function addtocart(){
+    document.getElementById('btnclose').click();
+    document.getElementById('frmaddtocart').submit();
+
+  }
+</script>
 
 </div>
 {% endblock %}
