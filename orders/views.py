@@ -53,3 +53,12 @@ def cart(request):
                 'total':total,
             }
     return render(request,'orders/cart.html',context)
+
+def remove_from_cart(request,orderdetails_id):
+    
+    if request.user.is_authenticated and not request.user.is_anonymous and orderdetails_id:
+        
+        orderdetails=OrderDetails.objects.get(id=orderdetails_id)
+        orderdetails.delete()
+
+    return redirect('add_to_cart:cart')

@@ -22,6 +22,7 @@
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
             <th scope="col">Subtotals</th>
+            <th scope="col">Control</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,9 @@
             <td>{{ line.quantity }}</td>
             <td>{{ line.price }}$</td>
             <td style="font-weight: bold; color: darkred;">{% widthratio line.quantity 1 line.price %}$</td>
+            <td>
+                <a href="{% url 'add_to_cart:remove_from_cart' line.id  %}" class="btn btn-outline-danger btn-sm">Remove</a>
+            </td>
           </tr>
         {% empty %}
         <h5 class="alert alert-warning">
