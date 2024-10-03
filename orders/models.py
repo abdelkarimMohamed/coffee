@@ -21,3 +21,6 @@ class OrderDetails(models.Model):
 
     def __str__(self):
         return f"User: {self.order.user.username} Product: {self.product.name} Order id: {self.order.id}"
+    
+    class Meta:
+        ordering=['-id']

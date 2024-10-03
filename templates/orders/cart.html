@@ -31,7 +31,11 @@
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ line.product.name }}</td>
             <td><img src="{{ line.product.photo.url }}" style="width: 80px;height:80px ;" alt=""></td>
-            <td>{{ line.quantity }}</td>
+            <td>
+                <a href="{% url 'add_to_cart:sub_qty' line.id %}" class="btn btn-outline-warning btn-sm">-</a>
+                {{ line.quantity }}
+                <a href="{% url 'add_to_cart:add_qty' line.id %}" class="btn btn-outline-warning btn-sm">+</a>
+            </td>
             <td>{{ line.price }}$</td>
             <td style="font-weight: bold; color: darkred;">{% widthratio line.quantity 1 line.price %}$</td>
             <td>
