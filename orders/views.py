@@ -33,8 +33,14 @@ def add_to_cart(request):
 
 
         return redirect('products:product',pro_id=pro_id)
-    else: 
-        return redirect('products:products')
+    else:
+        if 'pro_id' in request.GET:
+
+            messages.error(request,'You musr be logged in')
+            pro_id = request.GET.get('pro_id')
+            return redirect('products:product',pro_id=pro_id)
+        else: 
+            return redirect('index')
     
 def cart(request):
     context=None
