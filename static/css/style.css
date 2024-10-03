@@ -180,6 +180,13 @@ input[type=number]:focus,
 .my-form{
   background-color: antiquewhite;
 }
+.my-num{
+  color: darkred;
+  font-weight: bold;
+  border: 1px solid darkred;
+  padding: 2px 10px;
+  border-radius: 50px;
+}
 
 .my-content{
   background-color: antiquewhite;

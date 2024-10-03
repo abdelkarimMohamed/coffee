@@ -1,0 +1,28 @@
+#header{
+    background: #5A020Cce;
+    color: #fff;
+}
+#head{
+    color: bisque;
+}
+.module h2, .module caption, .inline-group h2{
+    background: #750815ce;
+}
+div.breadcrumbs{
+    background: #750815ce;
+}
+.selector-chosen h2{
+    background: #750815ce !important;
+}
+fieldset .fieldset-heading, fieldset .inline-heading, :not(.inline-related) .collapse summary{
+    background: #750815ce !important;
+    color: #fff;
+}
+
+.button:active, input[type=submit]:active, input[type=button]:active, .button:focus, input[type=submit]:focus, input[type=button]:focus, .button:hover, input[type=submit]:hover, input[type=button]:hover{
+    background: #931221ce !important;
+}
+.button, input[type=submit], input[type=button], .button:focus, input[type=submit], input[type=button], .button, input[type=submit], input[type=button]{
+    background: #931221ce !important;
+    color: #fff !important;
+}

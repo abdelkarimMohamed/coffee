@@ -21,8 +21,13 @@ def add_to_cart(request):
 
         if order:
             old_order=Order.objects.get(user=request.user,is_finished=False)
-
-            orderDetails=OrderDetails.objects.create(order=old_order,product=pro,price=pro.price,quantity=qty)
+            
+            if OrderDetails.objects.all().filter(order=old_order,product=pro).exists():
+                orderDetail=OrderDetails.objects.get(order=old_order,product=pro)
+                orderDetail.quantity+=int(qty)
+                orderDetail.save()
+            else:
+                orderDetails=OrderDetails.objects.create(order=old_order,product=pro,price=pro.price,quantity=qty)
             messages.success(request,'Was added to cart for old order')
 
 
