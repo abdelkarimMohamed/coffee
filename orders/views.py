@@ -35,3 +35,21 @@ def add_to_cart(request):
         return redirect('products:product',pro_id=pro_id)
     else: 
         return redirect('products:products')
+    
+def cart(request):
+    context=None
+    if request.user.is_authenticated and not request.user.is_anonymous:
+        if Order.objects.all().filter(user=request.user,is_finished=False).exists():
+
+            order=Order.objects.get(user=request.user,is_finished=False)
+
+            orderdetails=OrderDetails.objects.all().filter(order=order)
+            total=0
+            for orderdetail in orderdetails:
+                total+=orderdetail.price * orderdetail.quantity
+            context={
+                'orderdetails':orderdetails,
+                'order':order,
+                'total':total,
+            }
+    return render(request,'orders/cart.html',context)

@@ -41,6 +41,7 @@
             {% if request.user.is_authenticated %}
             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile ({{ request.user.username }})</a>
             <a href="{% url 'accounts:show_product_favorite' %}" class="dropdown-item">My Favorites</a>
+            <a href="{% url 'add_to_cart:cart' %}" class="dropdown-item">My Cart</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
