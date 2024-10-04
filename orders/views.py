@@ -1,13 +1,12 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from products.models import Product
-from .models import Order,OrderDetails
+from .models import Order,OrderDetails,Payment
 from django.utils import timezone
 
 def add_to_cart(request):
 
     if 'pro_id' in request.GET and 'price' in request.GET and 'qty' in request.GET and request.user.is_authenticated and not request.user.is_anonymous:
-
         # order=Order.objects.create(user=request.user,order_date=timezone.now,is_finished=False)
         pro_id=request.GET['pro_id']
         qty=request.GET['qty']
@@ -106,18 +105,53 @@ def sub_qty(request,orderdetails_id):
 
 def payment(request):
     context=None
-    if request.user.is_authenticated and not request.user.is_anonymous:
-        if Order.objects.all().filter(user=request.user,is_finished=False).exists():
+    ship_address=None
+    ship_phone=None
+    card_number=None
+    expire=None
+    security_code=None
+    is_added=None
+    
 
-            order=Order.objects.get(user=request.user,is_finished=False)
+    if request.method == 'POST' and 'btnpayment' in request.POST and 'ship_address' in request.POST and 'ship_phone' in request.POST and 'card_number' in request.POST and 'expire' in request.POST and 'security_code' in request.POST:
 
-            orderdetails=OrderDetails.objects.all().filter(order=order)
-            total=0
-            for orderdetail in orderdetails:
-                total+=orderdetail.price * orderdetail.quantity
-            context={
-                'orderdetails':orderdetails,
-                'order':order,
-                'total':total,
-            }
+        ship_address=request.POST['ship_address']
+        ship_phone=request.POST['ship_phone']
+        card_number=request.POST['card_number']
+        expire=request.POST['expire']
+        security_code=request.POST['security_code']
+
+        if request.user.is_authenticated and not request.user.is_anonymous:
+            if Order.objects.all().filter(user=request.user,is_finished=False).exists():
+
+                order=Order.objects.get(user=request.user,is_finished=False)
+                payment=Payment(order=order,shipment_address=ship_address,shipment_phone=ship_phone,card_number=card_number,expire=expire,security=security_code)
+                payment.save()
+                order.is_finished=True
+                order.save()
+                is_added=True
+                messages.success(request,'Your order is finished')
+        context={
+            'ship_address':ship_address,
+            'ship_phone':ship_phone,
+            'card_number':card_number,
+            'expire':expire,
+            'security_code':security_code,
+            'is_added':is_added,
+        }
+    else:
+        if request.user.is_authenticated and not request.user.is_anonymous:
+            if Order.objects.all().filter(user=request.user,is_finished=False).exists():
+
+                order=Order.objects.get(user=request.user,is_finished=False)
+
+                orderdetails=OrderDetails.objects.all().filter(order=order)
+                total=0
+                for orderdetail in orderdetails:
+                    total+=orderdetail.price * orderdetail.quantity
+                context={
+                    'orderdetails':orderdetails,
+                    'order':order,
+                    'total':total,
+                }
     return render(request,'orders/payment.html',context)

@@ -27,6 +27,7 @@ class OrderDetails(models.Model):
         ordering=['-id']
 
 class Payment(models.Model):
+    
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     shipment_address=models.CharField(max_length=150)
     shipment_phone=models.CharField(max_length=50)
