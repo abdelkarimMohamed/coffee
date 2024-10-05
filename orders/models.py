@@ -9,9 +9,11 @@ class Order(models.Model):
     order_date=models.DateTimeField()
     details=models.ManyToManyField(Product,through='OrderDetails')
     is_finished=models.BooleanField()
+    total=0
+    items_count=0
 
     def __str__(self):
-        return f"User: {self.user.username} Order id: {self.id}"
+        return f"User: {self.user.username}, Order id: {self.id}"
     
 class OrderDetails(models.Model):
 
@@ -27,7 +29,7 @@ class OrderDetails(models.Model):
         ordering=['-id']
 
 class Payment(models.Model):
-    
+
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     shipment_address=models.CharField(max_length=150)
     shipment_phone=models.CharField(max_length=50)

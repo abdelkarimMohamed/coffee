@@ -155,3 +155,24 @@ def payment(request):
                     'total':total,
                 }
     return render(request,'orders/payment.html',context)
+
+def show_orders(request):
+
+    context=None
+    all_orders=None
+    if request.user.is_authenticated and not request.user.is_anonymous:
+        all_orders=Order.objects.all().filter(user=request.user)
+        if all_orders:
+            for x in all_orders:
+                order=Order.objects.get(id=x.id)
+                orderdetails=OrderDetails.objects.all().filter(order=order)
+                total=0
+                for orderdetail in orderdetails:
+                    total+=orderdetail.price * orderdetail.quantity
+                x.total=total
+                x.items_count=orderdetails.count
+    context={
+        'all_orders':all_orders
+    }
+
+    return render(request,'orders/show_orders.html',context)
